@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "World Clocks",
+  "version": "1.1",
+  "description": "Shows clocks for Poland and selected countries (up to 3 clocks)",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": ["storage"]
+}

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>World Clocks</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 10px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        width: 600px;
+        min-height: 270px;
+        border: 5px solid #c3cfe2;
+      }
+
+      h1 {
+        color: #333;
+        margin: 10px 0 20px 0;
+        text-align: center;
+        font-size: 20px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 15px;
+        align-items: center;
+      }
+
+      select {
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: 2px solid #c3cfe2;
+        background: white;
+        font-size: 14px;
+        cursor: pointer;
+        min-width: 200px;
+      }
+
+      button {
+        padding: 8px 16px;
+        border-radius: 5px;
+        border: none;
+        background: #4caf50;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background: #45a049;
+      }
+
+      button:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .container {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .clock-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+      }
+
+      .remove-btn {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #e74c3c;
+        color: white;
+        border: 2px solid white;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 20px;
+        padding: 0;
+        z-index: 100;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .remove-btn:hover {
+        background: #c0392b;
+      }
+
+      .clock-section.poland .remove-btn {
+        display: none;
+      }
+
+      .clock {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        min-width: 160px;
+      }
+
+      .city {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .time {
+        font-size: 22px;
+        color: #2c3e50;
+        font-family: "Courier New", monospace;
+      }
+
+      .date {
+        font-size: 11px;
+        color: #7f8c8d;
+        margin-top: 5px;
+      }
+
+      .analog-clock {
+        width: 110px;
+        height: 110px;
+        border: 6px solid #333;
+        border-radius: 50%;
+        position: relative;
+        background: white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .center-circle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #333;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+      }
+
+      .hand {
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        transform-origin: bottom;
+        transform: translateX(-50%) rotate(0deg);
+        border-radius: 3px;
+      }
+
+      .hour-hand {
+        width: 4px;
+        height: 30px;
+        background: #333;
+        z-index: 8;
+      }
+
+      .minute-hand {
+        width: 3px;
+        height: 40px;
+        background: #555;
+        z-index: 9;
+      }
+
+      .second-hand {
+        width: 1px;
+        height: 45px;
+        background: #e74c3c;
+        z-index: 10;
+      }
+
+      .hour-mark {
+        position: absolute;
+        width: 2px;
+        height: 8px;
+        background: #333;
+        left: 50%;
+        transform-origin: 0 55px;
+      }
+
+      .hour-number {
+        position: absolute;
+        font-size: 9px;
+        font-weight: bold;
+        color: #333;
+        left: 50%;
+        top: 50%;
+        transform-origin: 0 -38px;
+        width: 12px;
+        text-align: center;
+        margin-left: -6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <select id="country-select">
+        <option value="">-- Select country --</option>
+      </select>
+      <button id="add-clock-btn">Add clock</button>
+    </div>
+
+    <div class="container" id="clocks-container">
+      <!-- Clocks will be added dynamically -->
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
