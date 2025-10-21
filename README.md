@@ -33,3 +33,10 @@ Notes for developers
   - `icon.png` — extension icon
 - The extension forces the digital display to English (`en-GB`) for consistent Latin numerals and English weekday/month names.
 - The country select is shown alphabetically in the popup while the internal `COUNTRIES` array keeps stable indices so saved preferences don't break.
+
+Time format (12/24h)
+
+- The popup includes a toggle that switches between 12-hour (AM/PM) and 24-hour formats.
+- The toggle is located next to the country selector and the "Add clock" button.
+- The user's choice is saved in `localStorage` under the key `timeFormat` and uses the values `"12"` or `"24"`.
+- By default the extension uses 24-hour format.

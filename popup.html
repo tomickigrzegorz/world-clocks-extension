@@ -59,6 +59,56 @@
         cursor: not-allowed;
       }
 
+      .time-format-switch {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .switch-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .switch-label input[type="checkbox"] {
+        display: none;
+      }
+
+      .slider {
+        position: relative;
+        width: 44px;
+        height: 22px;
+        background: #ccc;
+        border-radius: 22px;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+
+      .slider::before {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+      }
+
+      .switch-label input[type="checkbox"]:checked + .slider {
+        background: #4caf50;
+      }
+
+      .switch-label input[type="checkbox"]:checked + .slider::before {
+        transform: translateX(22px);
+      }
+
       .container {
         margin-top: 20px;
         display: flex;
@@ -210,6 +260,14 @@
         <option value="">-- Select country --</option>
       </select>
       <button id="add-clock-btn">Add clock</button>
+      <div class="time-format-switch">
+        <label class="switch-label">
+          <span>12h</span>
+          <input type="checkbox" id="time-format-toggle" />
+          <span class="slider"></span>
+          <span>24h</span>
+        </label>
+      </div>
     </div>
 
     <div class="container" id="clocks-container">

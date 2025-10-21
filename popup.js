@@ -109,11 +109,13 @@ const COUNTRIES = [
 const MAX_CLOCKS = 3;
 let activeClocks = [];
 let updateInterval;
+let use24HourFormat = true; // Default to 24-hour format
 
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
   populateCountrySelect();
   loadClocks();
+  loadTimeFormat();
   setupEventListeners();
   startClockUpdates();
 });
@@ -144,6 +146,9 @@ function getSortedCountryEntries() {
 // Setup event listeners
 function setupEventListeners() {
   document.getElementById("add-clock-btn").addEventListener("click", addClock);
+  document
+    .getElementById("time-format-toggle")
+    .addEventListener("change", handleTimeFormatChange);
 }
 
 // Load clocks from localStorage
@@ -158,6 +163,23 @@ function loadClocks() {
     ];
   }
   renderClocks();
+}
+
+// Load time format from localStorage
+function loadTimeFormat() {
+  const saved = localStorage.getItem("timeFormat");
+  if (saved !== null) {
+    use24HourFormat = saved === "24";
+  }
+  // Update checkbox state (checked = 24h)
+  document.getElementById("time-format-toggle").checked = use24HourFormat;
+}
+
+// Handle time format change
+function handleTimeFormatChange(event) {
+  use24HourFormat = event.target.checked;
+  localStorage.setItem("timeFormat", use24HourFormat ? "24" : "12");
+  updateClocks(); // Refresh all clocks immediately
 }
 
 // Save clocks to localStorage
@@ -315,7 +337,7 @@ function updateDigitalClock(clockId, date, country) {
   const displayLocale = "en-GB";
   const time = date.toLocaleString(displayLocale, {
     timeZone: country.timezone,
-    hour12: false,
+    hour12: !use24HourFormat,
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
