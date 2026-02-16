@@ -54,6 +54,7 @@ const COUNTRIES = [
     timezone: "Asia/Ho_Chi_Minh",
     locale: "vi-VN",
   },
+  { name: "Thailand (Bangkok)", timezone: "Asia/Bangkok", locale: "th-TH" },
   { name: "United Kingdom", timezone: "Europe/London", locale: "en-GB" },
   {
     name: "Saudi Arabia (Riyadh)",
@@ -139,7 +140,7 @@ function populateCountrySelect() {
 // Return countries entries sorted by name but keep original indices
 function getSortedCountryEntries() {
   return COUNTRIES.map((c, i) => ({ index: i, country: c })).sort((a, b) =>
-    a.country.name.localeCompare(b.country.name)
+    a.country.name.localeCompare(b.country.name),
   );
 }
 
