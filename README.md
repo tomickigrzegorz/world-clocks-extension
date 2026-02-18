@@ -14,7 +14,7 @@ How to install (developer / local)
 
 1. Open Chrome and go to chrome://extensions
 2. Enable "Developer mode" in the top-right.
-3. Click "Load unpacked" and select this project folder (`zegary-chrome-extension`).
+3. Click "Load unpacked" and select this project folder (`world-clocks-extension`).
 4. The extension's icon will appear in the toolbar. Click it to open the popup.
 
 Usage
