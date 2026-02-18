@@ -6,8 +6,7 @@ A small Chrome extension that shows up to 3 world clocks.
 
 Features
 
-- Poland is shown by default and cannot be removed.
-- Add up to 2 additional clocks (3 total) from a country selector.
+- Add up to 3 clocks from a country selector.
 - Each clock shows a digital time, a short date, and an analog clock face.
 - Selected clocks are remembered in browser storage (localStorage).
 
@@ -21,7 +20,7 @@ How to install (developer / local)
 Usage
 
 - Use the dropdown to choose a country and click "Add clock".
-- You can add at most 3 clocks (Poland + 2 others).
+- You can add at most 3 clocks.
 - To remove an added clock, click the red × in the top-right of the clock card.
 
 Notes for developers

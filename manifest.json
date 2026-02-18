@@ -3,7 +3,7 @@
   "type": "module",
   "name": "World Clocks",
   "version": "1.1",
-  "description": "Shows clocks for Poland and selected countries (up to 3 clocks)",
+  "description": "Shows world clocks (up to 3 clocks)",
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"

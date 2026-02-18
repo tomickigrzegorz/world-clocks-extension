@@ -20,13 +20,11 @@ function populateCountrySelect() {
   // Build a sorted view of countries (by name) but keep original indices
   const entries = getSortedCountryEntries();
   entries.forEach(({ index, country }) => {
-    if (!country.fixed) {
-      const option = document.createElement("option");
-      // Use original index as the value so saved indices remain valid
-      option.value = index;
-      option.textContent = country.name;
-      select.appendChild(option);
-    }
+    const option = document.createElement("option");
+    // Use original index as the value so saved indices remain valid
+    option.value = index;
+    option.textContent = country.name;
+    select.appendChild(option);
   });
 }
 
@@ -51,10 +49,7 @@ function loadClocks() {
   if (saved) {
     activeClocks = JSON.parse(saved);
   } else {
-    // Default clocks: Poland
-    activeClocks = [
-      { countryIndex: 0 }, // Poland
-    ];
+    activeClocks = [];
   }
   renderClocks();
 }
@@ -99,19 +94,12 @@ function renderClocks() {
 function createClockElement(country, index) {
   const section = document.createElement("div");
   section.className = "clock-section";
-  if (country.fixed) {
-    section.classList.add("poland");
-  }
   section.dataset.index = index;
 
   const clockId = `clock-${index}`;
 
   section.innerHTML = `
-    ${
-      !country.fixed
-        ? `<button class="remove-btn" data-index="${index}">×</button>`
-        : ""
-    }
+    <button class="remove-btn" data-index="${index}">×</button>
     <div class="clock">
       <div class="city">${country.name}</div>
       <div class="time" id="${clockId}-time">--:--:--</div>
@@ -126,10 +114,8 @@ function createClockElement(country, index) {
   `;
 
   // Add event listener to remove button
-  if (!country.fixed) {
-    const removeBtn = section.querySelector(".remove-btn");
-    removeBtn.addEventListener("click", () => removeClock(index));
-  }
+  const removeBtn = section.querySelector(".remove-btn");
+  removeBtn.addEventListener("click", () => removeClock(index));
 
   // Dodanie znaków godzinowych po dodaniu do DOM
   setTimeout(() => {
@@ -191,11 +177,6 @@ function addClock() {
 
 // Remove a clock
 function removeClock(index) {
-  const country = COUNTRIES[activeClocks[index].countryIndex];
-  if (country.fixed) {
-    return; // Poland cannot be removed
-  }
-
   activeClocks.splice(index, 1);
   saveClocks();
   renderClocks();
