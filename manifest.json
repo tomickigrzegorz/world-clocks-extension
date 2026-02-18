@@ -1,6 +1,5 @@
 {
   "manifest_version": 3,
-  "type": "module",
   "name": "World Clocks",
   "version": "1.1",
   "description": "Shows world clocks (up to 3 clocks)",
