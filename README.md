@@ -1,6 +1,6 @@
 # World Clocks — Chrome Extension
 
-![Preview](./image.png)
+![Preview](./image.jpg)
 
 A small Chrome extension that shows up to 3 world clocks.
 
