@@ -4,12 +4,14 @@ const MAX_CLOCKS = 3;
 let activeClocks = [];
 let updateInterval;
 let use24HourFormat = true; // Default to 24-hour format
+let showAnalogClock = true; // Default to showing analog clock
 
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
   populateCountrySelect();
   loadClocks();
   loadTimeFormat();
+  loadAnalogClockSetting();
   setupEventListeners();
   startClockUpdates();
 });
@@ -41,6 +43,9 @@ function setupEventListeners() {
   document
     .getElementById("time-format-toggle")
     .addEventListener("change", handleTimeFormatChange);
+  document
+    .getElementById("analog-clock-toggle")
+    .addEventListener("change", handleAnalogClockToggle);
 }
 
 // Load clocks from localStorage
@@ -52,6 +57,30 @@ function loadClocks() {
     activeClocks = [];
   }
   renderClocks();
+}
+
+// Load analog clock setting from localStorage
+function loadAnalogClockSetting() {
+  const saved = localStorage.getItem("showAnalogClock");
+  if (saved !== null) {
+    showAnalogClock = saved === "true";
+  }
+  document.getElementById("analog-clock-toggle").checked = showAnalogClock;
+  applyAnalogClockVisibility();
+}
+
+// Handle analog clock toggle
+function handleAnalogClockToggle(event) {
+  showAnalogClock = event.target.checked;
+  localStorage.setItem("showAnalogClock", showAnalogClock);
+  applyAnalogClockVisibility();
+}
+
+// Show or hide all analog clocks
+function applyAnalogClockVisibility() {
+  document.querySelectorAll(".analog-clock").forEach((el) => {
+    el.style.display = showAnalogClock ? "" : "none";
+  });
 }
 
 // Load time format from localStorage
@@ -87,6 +116,7 @@ function renderClocks() {
     container.appendChild(clockElement);
   });
 
+  applyAnalogClockVisibility();
   updateAddButtonState();
 }
 
