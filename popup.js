@@ -5,6 +5,8 @@ let activeClocks = [];
 let updateInterval;
 let use24HourFormat = true; // Default to 24-hour format
 let showAnalogClock = true; // Default to showing analog clock
+let showConverter = false;
+let converterRefDate = null; // UTC reference date for converter display
 
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
@@ -12,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadClocks();
   loadTimeFormat();
   loadAnalogClockSetting();
+  loadConverterSetting();
   setupEventListeners();
   startClockUpdates();
 });
@@ -46,6 +49,15 @@ function setupEventListeners() {
   document
     .getElementById("analog-clock-toggle")
     .addEventListener("change", handleAnalogClockToggle);
+  document
+    .getElementById("converter-toggle")
+    .addEventListener("change", handleConverterToggle);
+  document
+    .getElementById("conv-time")
+    .addEventListener("input", handleConverterBarChange);
+  document
+    .getElementById("conv-country")
+    .addEventListener("change", handleConverterBarChange);
 }
 
 // Load clocks from localStorage
@@ -117,6 +129,10 @@ function renderClocks() {
   });
 
   applyAnalogClockVisibility();
+  if (showConverter) {
+    updateConvCountrySelect();
+    applyConverterVisibility();
+  }
   updateAddButtonState();
 }
 
@@ -130,7 +146,7 @@ function createClockElement(country, index) {
 
   section.innerHTML = `
     <button class="remove-btn" data-index="${index}">×</button>
-    <div class="clock">
+    <div class="clock" id="${clockId}-card">
       <div class="city">${country.name}</div>
       <div class="time" id="${clockId}-time">--:--:--</div>
       <div class="date" id="${clockId}-date">--</div>
@@ -220,14 +236,15 @@ function updateAddButtonState() {
 
 // Update all clocks
 function updateClocks() {
-  const now = new Date();
+  const date =
+    showConverter && converterRefDate ? converterRefDate : new Date();
 
   activeClocks.forEach((clock, index) => {
     const country = COUNTRIES[clock.countryIndex];
     const clockId = `clock-${index}`;
 
-    updateDigitalClock(clockId, now, country);
-    updateAnalogClock(clockId, now, country.timezone);
+    updateDigitalClock(clockId, date, country);
+    updateAnalogClock(clockId, date, country.timezone);
   });
 }
 
@@ -292,6 +309,114 @@ function updateAnalogClock(clockId, date, timeZone) {
   hourHand.style.transform = `translateX(-50%) rotate(${hourAngle}deg)`;
   minuteHand.style.transform = `translateX(-50%) rotate(${minuteAngle}deg)`;
   secondHand.style.transform = `translateX(-50%) rotate(${secondAngle}deg)`;
+}
+
+// ── Time Converter ──────────────────────────────────────────────────────────
+
+function loadConverterSetting() {
+  const saved = localStorage.getItem("showConverter");
+  if (saved !== null) showConverter = saved === "true";
+  document.getElementById("converter-toggle").checked = showConverter;
+  // Visibility applied after clocks render in renderClocks
+}
+
+function handleConverterToggle(event) {
+  showConverter = event.target.checked;
+  localStorage.setItem("showConverter", showConverter);
+  if (showConverter) {
+    // Pre-fill bar with current real time
+    const now = new Date();
+    document.getElementById("conv-time").value =
+      `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    updateConvCountrySelect();
+    handleConverterBarChange();
+  } else {
+    converterRefDate = null;
+    updateClocks(); // return to real time
+  }
+  applyConverterVisibility();
+}
+
+// Show/hide the bar and apply/remove converter-mode class on cards
+function applyConverterVisibility() {
+  document.getElementById("converter-bar").style.display = showConverter
+    ? "flex"
+    : "none";
+  document.querySelectorAll(".clock").forEach((el) => {
+    el.classList.toggle("converter-mode", showConverter);
+  });
+}
+
+// Populate the converter country dropdown from active clocks
+function updateConvCountrySelect() {
+  const sel = document.getElementById("conv-country");
+  const prevValue = sel.value;
+  sel.innerHTML = "";
+  activeClocks.forEach((clock, index) => {
+    const opt = document.createElement("option");
+    opt.value = index;
+    opt.textContent = COUNTRIES[clock.countryIndex].name;
+    sel.appendChild(opt);
+  });
+  // Restore previous selection if still valid
+  if (prevValue && sel.querySelector(`option[value="${prevValue}"]`)) {
+    sel.value = prevValue;
+  }
+}
+
+// Called when time input or country dropdown changes
+function handleConverterBarChange() {
+  const timeVal = document.getElementById("conv-time").value;
+  const sourceIndex = parseInt(
+    document.getElementById("conv-country").value,
+  );
+  if (!timeVal || isNaN(sourceIndex) || !activeClocks[sourceIndex]) return;
+
+  const [hour, minute] = timeVal.split(":").map(Number);
+  const country = COUNTRIES[activeClocks[sourceIndex].countryIndex];
+  converterRefDate = localTimeToUTC(hour, minute, country.timezone);
+  updateClocks();
+}
+
+// Convert a local hour:minute in the given timezone to a UTC Date
+function localTimeToUTC(hour, minute, timezone) {
+  const now = new Date();
+  const localDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+
+  // Naively treat the desired time as UTC
+  const candidate = new Date(
+    `${localDate}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00Z`,
+  );
+
+  // What local time does the candidate show in the target timezone?
+  const candidateHour =
+    parseInt(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: timezone,
+        hour: "numeric",
+        hour12: false,
+      }).format(candidate),
+    ) % 24;
+
+  const candidateMinute = parseInt(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: timezone,
+      minute: "numeric",
+    }).format(candidate),
+  );
+
+  // Adjust by the difference to get the true UTC time
+  let diffMinutes =
+    candidateHour * 60 + candidateMinute - (hour * 60 + minute);
+  if (diffMinutes > 12 * 60) diffMinutes -= 24 * 60;
+  if (diffMinutes < -12 * 60) diffMinutes += 24 * 60;
+
+  return new Date(candidate.getTime() - diffMinutes * 60 * 1000);
 }
 
 // Start updating clocks

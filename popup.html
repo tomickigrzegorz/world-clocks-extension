@@ -251,6 +251,61 @@
         text-align: center;
         margin-left: -6px;
       }
+
+      .clock.converter-mode {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d6eaf8 100%);
+        border: 1.5px solid #85c1e9;
+      }
+
+      .clock.converter-mode .time {
+        color: #1a5276;
+      }
+
+      .converter-bar {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+        padding: 12px 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        color: #444;
+        flex-wrap: wrap;
+      }
+
+      .converter-bar span {
+        color: #666;
+        font-weight: 500;
+      }
+
+      .converter-bar input[type="time"] {
+        padding: 6px 10px;
+        border: 2px solid #c3cfe2;
+        border-radius: 5px;
+        font-size: 18px;
+        font-family: "Courier New", monospace;
+        color: #1a5276;
+        background: #eaf4fb;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .converter-bar input[type="time"]:focus {
+        border-color: #85c1e9;
+      }
+
+      .converter-bar select {
+        padding: 6px 10px;
+        border: 2px solid #c3cfe2;
+        border-radius: 5px;
+        font-size: 14px;
+        min-width: 130px;
+        background: #f8f9fa;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -274,10 +329,25 @@
           <span class="slider"></span>
         </label>
       </div>
+      <div class="time-format-switch">
+        <label class="switch-label">
+          <span>Converter</span>
+          <input type="checkbox" id="converter-toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
 
     <div class="container" id="clocks-container">
       <!-- Clocks will be added dynamically -->
+    </div>
+
+    <div class="converter-bar" id="converter-bar">
+      <span>If it's</span>
+      <input type="time" id="conv-time" value="08:00" />
+      <span>in</span>
+      <select id="conv-country"></select>
+      <span>— what time is it elsewhere?</span>
     </div>
 
     <script type="module" src="popup.js"></script>
