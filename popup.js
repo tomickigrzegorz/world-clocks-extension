@@ -317,7 +317,10 @@ function loadConverterSetting() {
   const saved = localStorage.getItem("showConverter");
   if (saved !== null) showConverter = saved === "true";
   document.getElementById("converter-toggle").checked = showConverter;
-  // Visibility applied after clocks render in renderClocks
+  if (showConverter) {
+    updateConvCountrySelect();
+  }
+  applyConverterVisibility();
 }
 
 function handleConverterToggle(event) {
