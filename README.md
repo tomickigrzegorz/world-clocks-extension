@@ -1,6 +1,6 @@
 # World Clocks — Chrome Extension
 
-![Preview](./image.jpg)
+![Preview](./01.jpg)
 
 A small Chrome extension that shows up to 3 world clocks.
 
@@ -9,6 +9,7 @@ Features
 - Add up to 3 clocks from a country selector.
 - Each clock shows a digital time, a short date, and an analog clock face.
 - Selected clocks are remembered in browser storage (localStorage).
+- Built-in time converter for quickly checking "what time is it elsewhere?".
 
 How to install (developer / local)
 
@@ -22,6 +23,19 @@ Usage
 - Use the dropdown to choose a country and click "Add clock".
 - You can add at most 3 clocks.
 - To remove an added clock, click the red × in the top-right of the clock card.
+
+Time Converter
+
+The **Converter** toggle (top-right of the toolbar) reveals a converter bar at the bottom of the popup.
+
+![Converter](./02.jpg)
+
+It lets you pick any time and a reference city, then instantly shows what that time corresponds to in all your added clocks — without changing the live display. Example: set `08:00` in `Poland` to see that it is `15:00` in China.
+
+- The input accepts any time value (HH:MM).
+- The city dropdown lists all currently added clocks as reference points.
+- Clock cards update their displayed time to reflect the converted value while the converter is active.
+- Toggling the converter off returns all clocks to live time.
 
 Notes for developers
 
